@@ -16,7 +16,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:3000/user",
+        "http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user",
         {
           email,
           password,
