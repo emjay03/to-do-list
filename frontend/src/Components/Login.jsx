@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Container } from "@chakra-ui/react";
 import { FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
-
+ 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,27 +14,30 @@ function Login() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post(
-        "http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user",
-        {
-          email,
-          password,
-        }
-      );
+    const postUrl = "http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user";
 
+    try {
+      const response = await axios.post(postUrl, {
+        email,
+        password,
+      });
+  
       if (response.status === 200) {
-        setMessage("Login successful");
-        const sessionName = email; // Use the email as the session name
-        navigate("/home", { state: { sessionName } }); // Pass sessionName as state when redirecting
         
-      }
-    } catch (error) {
-      if (error.response.status === 401) {
-        setMessage("Invalid credential");
+        const sessionName = email; // Use the email as the session name
+        alert("Login Successfull");
+       
+        navigate("/home", { state: { sessionName } }); // Pass sessionName as state when redirecting
       } else {
         setMessage("An error occurred");
       }
+    } catch (error) {
+      if (error.response) {
+        setMessage("Invalid credentials");
+      } else {
+        setMessage("An error occurred");
+      }
+     
     }
   };
 

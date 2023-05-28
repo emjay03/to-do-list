@@ -36,3 +36,34 @@ padding: 1rem;
 .FormControl .login-btn{
  padding: .44rem 0rem .44rem 0rem;; 
 }
+
+/* home component */
+
+.home-container{
+  height: 100vh;
+ 
+}
+.home-body{
+  width: 100%;
+height: 100%;
+padding: 1rem;
+}
+.home-header{
+  width: 100%;
+ padding: 1rem;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  
+}
+.home-body .board{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  
+}
+.board .board-t{
+  border-radius: .55rem;
+  background-color: #D0F5BE;
+}
