@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate(); // Hook for navigation
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -43,6 +43,7 @@ function Login() {
 
   return (
     <div className="login-container">
+       
       <Container className="container-card" maxW="lg">
         <form onSubmit={handleFormSubmit}>
           <FormControl className="FormControl">
