@@ -1,17 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Avatar, WrapItem } from "@chakra-ui/react";
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  useDisclosure,
+} from "@chakra-ui/react";
+import {
+  HamburgerIcon,
+} from "@chakra-ui/icons";
 
-function Home(props) {
+ 
+ 
+function Home() {
   const location = useLocation();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
+  const [placement] = React.useState("left");
   const [updatedInfo, setUpdatedInfo] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-  const [todo, setTodo] = useState('');
-  const [datetime, setdatetime] = useState('');
+  const [todo, setTodo] = useState("");
+  const [datetime, setdatetime] = useState("");
   const [todoList, setTodoList] = useState([]);
 
   useEffect(() => {
@@ -21,7 +38,9 @@ function Home(props) {
       // Fetch user information using the sessionName
       const fetchUserInfo = async () => {
         try {
-          const response = await axios.get(`http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user/${state.sessionName}`);
+          const response = await axios.get(
+            `http://localhost:4598/user/${state.sessionName}`
+          );
           if (response.status === 200) {
             setUserInfo(response.data);
             setUpdatedInfo(response.data); // Set the initial values for the form fields
@@ -36,7 +55,7 @@ function Home(props) {
 
       fetchUserInfo();
     } else {
-      navigate('/login'); // Redirect to login page if sessionName is not available
+      navigate("/login"); // Redirect to login page if sessionName is not available
     }
   }, [location, navigate]);
 
@@ -46,20 +65,20 @@ function Home(props) {
         fetchTodoList(userInfo.iduser);
       }
     }, 5000);
-  
+
     // Fetch initial data
     if (userInfo && userInfo.iduser) {
       fetchTodoList(userInfo.iduser);
     }
-  
+
     return () => {
       clearInterval(interval);
     };
   }, [userInfo]);
-  
+
   const fetchTodoList = async (iduser) => {
     try {
-      const response = await axios.get(`http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/todos/${iduser}`);
+      const response = await axios.get(`http://localhost:4598/todos/${iduser}`);
       if (response.status === 200) {
         setTodoList(response.data);
       } else {
@@ -69,9 +88,6 @@ function Home(props) {
       // Handle error if request fails
     }
   };
-  
-  
-  
 
   const handleInputChange = (e) => {
     setUpdatedInfo({
@@ -91,11 +107,14 @@ function Home(props) {
     e.preventDefault();
 
     try {
-      const response = await axios.put(`http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user/${userInfo.iduser}`, updatedInfo);
+      const response = await axios.put(
+        `http://localhost:4598/user/${userInfo.idus0er}`,
+        updatedInfo
+      );
       if (response.status === 200) {
         // Update the user info in the state
         setUserInfo({ ...userInfo, email: updatedInfo.email });
-        alert('User information updated successfully!');
+        alert("User information updated successfully!");
       } else {
         // Handle error if user information update fails
       }
@@ -108,16 +127,16 @@ function Home(props) {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/insert', {
+      const response = await axios.post("http://localhost:4598/insert", {
         iduser: userInfo.iduser,
         todo: todo,
         datetime: datetime,
       });
       if (response.status === 200) {
         // Clear the input field after adding the to-do
-        setTodo('');
-        setdatetime('');
-        alert('To-do added successfully!');
+        setTodo("");
+        setdatetime("");
+        alert("To-do added successfully!");
         // Fetch the updated to-do list
         fetchTodoList();
       } else {
@@ -128,7 +147,39 @@ function Home(props) {
     }
   };
   return (
-    <div>
+    <div className="home-container">
+      <div className="home-header">
+      <h1>TO DO</h1>
+      <Button colorScheme="blue" onClick={onOpen}>
+        <HamburgerIcon />
+      </Button>
+      </div>
+      
+      <Drawer placement={placement} onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">TODO LIST</DrawerHeader>
+          <DrawerBody>
+            <WrapItem className="WrapItem">
+              <Avatar
+                name="Dan Abrahmov"
+                className="avatar-img"
+                src="https://bit.ly/dan-abramov"
+              />
+              {userInfo ? (
+                <div className="session-name">
+                 
+                  <h2>Welcome,<br></br> {userInfo.email}!</h2>
+                </div>
+              ) : (
+                <p>Loading email</p>
+              )}
+            </WrapItem>
+
+            <div>{/* Add more user information here */}</div>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
       {userInfo ? (
         <div>
           <h2>Welcome, {userInfo.email}!</h2>
@@ -163,7 +214,7 @@ function Home(props) {
               onChange={handleTodoChange}
               placeholder="Enter a to-do item"
             />
-              <input
+            <input
               type="datetime-local"
               name="datetime"
               value={datetime}

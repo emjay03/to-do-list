@@ -1,69 +1,92 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200&display=swap');
-*{
+
+* {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
 }
-.login-container{
+
+.login-container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
- 
+
 }
-.container-card{
+
+.container-card {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   padding: 2rem;
 }
-.head-sign{
+
+.head-sign {
   padding: 0 0 1rem 0;
 }
-.FormControl h2{
+
+.FormControl h2 {
   font-size: 1.55rem;
- 
+
   font-weight: 700;
 }
-.FormControl p{
+
+.FormControl p {
   font-size: .88rem;
 }
-.FormControl{
-  
-padding: 1rem;
+
+.FormControl {
+
+  padding: 1rem;
 }
-.FormControl .forgot{
+
+.FormControl .forgot {
   padding: .44rem 0 .44rem 0;
 }
-.FormControl .login-btn{
- padding: .44rem 0rem .44rem 0rem;; 
+
+.FormControl .login-btn {
+  padding: .44rem 0rem .44rem 0rem;
+  ;
 }
 
 /* home component */
 
-.home-container{
+.home-container {
   height: 100vh;
- 
+
 }
-.home-body{
+
+.home-body {
   width: 100%;
-height: 100%;
-padding: 1rem;
+  height: 100%;
+  padding: 1rem;
 }
-.home-header{
+
+.home-header {
   width: 100%;
- padding: 1rem;
- display: flex;
- justify-content: space-between;
- align-items: center;
- box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
 }
-.home-body .board{
+
+.home-body .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  
+
 }
-.board .board-t{
+
+.board .board-t {
   border-radius: .55rem;
   background-color: #D0F5BE;
+}
+
+.WrapItem {
+
+  gap: 1rem;
+  display: flex;
+
+  align-items: center;
+
 }
