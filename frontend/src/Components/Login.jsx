@@ -14,7 +14,7 @@ function Login() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const postUrl = "http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user";
+    const postUrl = "http://localhost:4598/user";
 
     try {
       const response = await axios.post(postUrl, {
