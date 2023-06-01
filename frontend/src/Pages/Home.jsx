@@ -2,31 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Avatar, WrapItem } from "@chakra-ui/react";
+import { RiCalendarTodoFill } from "react-icons/ri";
+import { SiProgress } from "react-icons/si";
+import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
-} from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-} from "@chakra-ui/icons";
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 
- 
- 
+  MenuGroup,
+
+  MenuDivider,
+} from "@chakra-ui/react";
 function Home() {
   const location = useLocation();
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure({ defaultIsOpen: true });
-  const [placement] = React.useState("left");
-  const [updatedInfo, setUpdatedInfo] = useState({
-    email: "",
-    password: "",
-  });
   const [todo, setTodo] = useState("");
   const [datetime, setdatetime] = useState("");
   const [todoList, setTodoList] = useState([]);
@@ -43,7 +35,6 @@ function Home() {
           );
           if (response.status === 200) {
             setUserInfo(response.data);
-            setUpdatedInfo(response.data); // Set the initial values for the form fields
             fetchTodoList(response.data.iduser); // Fetch the to-do list for the logged-in user
           } else {
             // Handle error if user information retrieval fails
@@ -74,7 +65,7 @@ function Home() {
     return () => {
       clearInterval(interval);
     };
-  }, [userInfo]);
+  }, [userInfo]); 
 
   const fetchTodoList = async (iduser) => {
     try {
@@ -88,40 +79,14 @@ function Home() {
       // Handle error if request fails
     }
   };
-
-  const handleInputChange = (e) => {
-    setUpdatedInfo({
-      ...updatedInfo,
-      [e.target.name]: e.target.value,
-    });
-  };
-
+ 
   const handleTodoChange = (e) => {
     setTodo(e.target.value);
   };
   const handledatetimeChange = (e) => {
     setdatetime(e.target.value);
   };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.put(
-        `http://localhost:4598/user/${userInfo.idus0er}`,
-        updatedInfo
-      );
-      if (response.status === 200) {
-        // Update the user info in the state
-        setUserInfo({ ...userInfo, email: updatedInfo.email });
-        alert("User information updated successfully!");
-      } else {
-        // Handle error if user information update fails
-      }
-    } catch (error) {
-      // Handle error if request fails
-    }
-  };
+ 
 
   const handleAddTodo = async (e) => {
     e.preventDefault();
@@ -146,65 +111,76 @@ function Home() {
       // Handle error if request fails
     }
   };
+ 
+  const handleProfileClick = () => {
+    navigate("/profile", { state: { userInfo } });
+  };
+
+
   return (
     <div className="home-container">
-      <div className="home-header">
-      <h1>TO DO</h1>
-      <Button colorScheme="blue" onClick={onOpen}>
-        <HamburgerIcon />
-      </Button>
-      </div>
-      
-      <Drawer placement={placement} onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">TODO LIST</DrawerHeader>
-          <DrawerBody>
+      <div className="home-body">
+        <div className="side-nav">
+          <h1>MJ.TODO</h1>
+          <nav>
+            <h2>Menu</h2>
+            <ul>
+              <li>
+                <RiCalendarTodoFill />
+                <a>Todo</a>
+              </li>
+              <li>
+                <SiProgress />
+                <a> In progress</a>
+              </li>
+              <li>
+                <IoCheckmarkDoneSharp />
+                <a>Completed</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div className="main-content">
+          <header>
+            <h2>Overview</h2>
+
             <WrapItem className="WrapItem">
-              <Avatar
-                name="Dan Abrahmov"
-                className="avatar-img"
-                src="https://bit.ly/dan-abramov"
-              />
               {userInfo ? (
                 <div className="session-name">
-                 
-                  <h2>Welcome,<br></br> {userInfo.email}!</h2>
+                  <h2>{userInfo.email}</h2>
                 </div>
               ) : (
                 <p>Loading email</p>
               )}
+              <Menu>
+                <MenuButton colorScheme="pink">
+                  <Avatar
+                    name="Dan Abrahmov"
+                    className="avatar-img"
+                    src="https://bit.ly/dan-abramov"
+                  />
+                </MenuButton>
+                <MenuList>
+                  <MenuGroup title="Profile">
+                    <MenuItem onClick={handleProfileClick}>My Account</MenuItem>
+                    <MenuItem>Payments </MenuItem>
+                  </MenuGroup>
+                  <MenuDivider />
+                  <MenuGroup title="Help">
+                    <MenuItem>Docs</MenuItem>
+                    <MenuItem>FAQ</MenuItem>
+                  </MenuGroup>
+                  <MenuDivider />
+
+                  <MenuItem>Logout</MenuItem>
+                </MenuList>
+              </Menu>
             </WrapItem>
-
-            <div>{/* Add more user information here */}</div>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-      {userInfo ? (
+          </header>
+          {userInfo ? (
         <div>
-          <h2>Welcome, {userInfo.email}!</h2>
-          <form onSubmit={handleFormSubmit}>
-            <div>
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={updatedInfo.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label>Password:</label>
-              <input
-                type="password"
-                name="password"
-                value={updatedInfo.password}
-                onChange={handleInputChange}
-              />
-            </div>
-            <button type="submit">Update</button>
-          </form>
-
+          
+           
           <h3>Add a To-Do</h3>
           <form onSubmit={handleAddTodo}>
             <input
@@ -246,6 +222,8 @@ function Home() {
       ) : (
         <p>Loading user information...</p>
       )}
+        </div>
+      </div>
     </div>
   );
 }

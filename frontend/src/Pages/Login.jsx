@@ -10,7 +10,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate(); // Hook for navigation
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
