@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-import { Container } from "@chakra-ui/react";
-import { FormControl, FormLabel, Input, Button } from "@chakra-ui/react";
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Input from '@mui/material/Input';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
  
+import IconButton from '@mui/material/IconButton';
+import FilledInput from '@mui/material/FilledInput';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Button from '@mui/material/Button';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Stack from '@mui/material/Stack';
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,10 +52,80 @@ function Login() {
      
     }
   };
+  const [showPassword, setShowPassword] = React.useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   return (
     <div className="login-container">
+        <CssBaseline />
+
+        
+      
+       <div className="container-card">
+      <form onSubmit={handleFormSubmit}>
+      <p>{message}</p>
+     
+     <FormControl>
+     <FormControl fullWidth sx={{  m: 1}} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+             
+            label="Password"
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
+          
+          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? 'text' : 'password'}
+           
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+           <div className="login-btn">
+             <Stack direction="row" spacing={2}>
+      <Button type="submit" variant="contained">Sign in</Button>
+      
        
+    </Stack>
+    </div>
+        </FormControl>
+        </FormControl>
+      
+       </form>
+     
+      <div>
+         
+       </div> 
+       
+      </div>
+   
+      
+{/*        
       <Container className="container-card" maxW="lg">
         <form onSubmit={handleFormSubmit}>
           <FormControl className="FormControl">
@@ -75,7 +158,7 @@ function Login() {
             </div>
           </FormControl>
         </form>
-      </Container>
+      </Container> */}
     </div>
   );
 }
