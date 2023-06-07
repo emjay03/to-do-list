@@ -61,10 +61,25 @@
   width: 100%;
 }
  .head-bar .user-head{
- width: 100%;
+  
   display: flex;
-  justify-content: end;
+  
    
+ }
+ .user-head{
+  font-display: flex;
+  justify-content: center;
+  align-items: center;
+ }
+ .user-head h2{
+  font-size: 1rem;
+ }
+ .head-tool{
+  width: 100%;
+ 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
  }
 .home-body {
   width: 100%;

@@ -79,7 +79,7 @@ function Login() {
             onChange={(e) => setEmail(e.target.value)}
             required
              
-            label="Password"
+            label="Email"
           />
         </FormControl>
         <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
