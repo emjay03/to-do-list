@@ -108,6 +108,56 @@ app.post('/insert', (req, res) => {
     res.status(201).json({ message: 'To-do added successfully' });
   });
 });
+app.delete('/delete/:no', (req, res) => {
+  const no = req.params.no;
+
+  // Construct the DELETE query
+  const query = 'DELETE FROM tblcreatetodo WHERE no = ?';
+
+  // Execute the query with the no parameter
+  db.query(query, [no], (error, results, fields) => {
+    if (error) {
+      console.error('Error occurred:', error);
+      res.status(500).json({ message: 'An error occurred' });
+      return;
+    }
+
+    if (results.affectedRows === 0) {
+      console.log('To-do item not found.');
+      res.status(404).json({ message: 'To-do item not found' });
+      return;
+    }
+
+    console.log('To-do deleted successfully.');
+    res.status(200).json({ message: 'To-do deleted successfully' });
+  });
+});
+
+app.put('/update/:no', (req, res) => {
+  const no = req.params.no;
+  const { iduser, todo, date } = req.body;
+
+  // Construct the UPDATE query
+  const query = 'UPDATE tblcreatetodo SET iduser = ?, todo = ?, date = ? WHERE no = ?';
+
+  // Execute the query with the updated values and the no parameter
+  db.query(query, [iduser, todo, date, no], (error, results, fields) => {
+    if (error) {
+      console.error('Error occurred:', error);
+      res.status(500).json({ message: 'An error occurred' });
+      return;
+    }
+
+    if (results.affectedRows === 0) {
+      console.log('To-do item not found.');
+      res.status(404).json({ message: 'To-do item not found' });
+      return;
+    }
+
+    console.log('To-do updated successfully.');
+    res.status(200).json({ message: 'To-do updated successfully' });
+  });
+});
 
 // API endpoint to handle updating user information
 app.put('/user/:iduser', (req, res) => {
