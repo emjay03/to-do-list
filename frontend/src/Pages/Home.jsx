@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import axios from "axios";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -32,7 +31,8 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import Modal from '@mui/material/Modal';
-
+import Fade from '@mui/material/Fade';
+import Backdrop from '@mui/material/Backdrop';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -116,11 +116,50 @@ export default function Home() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [todo, setTodo] = useState("");
-  const [datetime, setdatetime] = useState("");
+  const [date, setdate] = useState("");
   const [todoList, setTodoList] = useState([]);
-  const [openmodal, setOpenmodal] = React.useState(false);
-  const handleOpenmodal = () => setOpen(true);
-  const handleClosemodal = () => setOpen(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  const [updatedTodo, setUpdatedTodo] = useState('');
+  const [updatedDate, setUpdatedDate] = useState('');
+  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState(null);
+  
+  const handleOpenModalUpdate = (item) => {
+    setSelectedTodo(item);
+    setUpdatedTodo(item.todo);
+    setUpdatedDate(item.date);
+    setOpenModalUpdate(true);
+  };
+  
+  const handleCloseModalUpdate = () => {
+    setOpenModalUpdate(false);
+  };
+  
+  const handleUpdateTodo = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await axios.put(`http://localhost:4598/update/${selectedTodo.no}`, {
+        iduser: userInfo.iduser,
+        todo: updatedTodo,
+        date: updatedDate,
+      });
+      if (response.status === 200) {
+        alert("To-do updated successfully!");
+        setOpenModalUpdate(false);
+        fetchTodoList();
+      } else {
+        // Handle error if updating the to-do fails
+      }
+    } catch (error) {
+      // Handle error if request fails
+    }
+  };
+  
+
   useEffect(() => {
     const { state } = location;
 
@@ -182,7 +221,7 @@ export default function Home() {
     setTodo(e.target.value);
   };
   const handledatetimeChange = (e) => {
-    setdatetime(e.target.value);
+    setdate(e.target.value);
   };
 
   const handleAddTodo = async (e) => {
@@ -192,12 +231,12 @@ export default function Home() {
       const response = await axios.post("http://localhost:4598/insert", {
         iduser: userInfo.iduser,
         todo: todo,
-        datetime: datetime,
+        date: date,
       });
       if (response.status === 200) {
         // Clear the input field after adding the to-do
         setTodo("");
-        setdatetime("");
+        setdate("");
         alert("To-do added successfully!");
         // Fetch the updated to-do list
         fetchTodoList();
@@ -208,6 +247,9 @@ export default function Home() {
       // Handle error if request fails
     }
   };
+
+   
+  
   const handleDeleteTodo = async (no) => {
     try {
       const response = await axios.delete(`http://localhost:4598/delete/${no}`);
@@ -424,13 +466,22 @@ export default function Home() {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <div>
-      <Button onClick={handleOpenmodal}>Open modal</Button>
+          <div>
+      <Button onClick={handleOpenModal}>Open modal</Button>
       <Modal
-        open={open}
-        onClose={handleClosemodal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
       >
+        <Fade in={openModal}>
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
           <form onSubmit={handleAddTodo}>
@@ -444,7 +495,7 @@ export default function Home() {
             <input
               type="datetime-local"
               name="datetime"
-              value={datetime}
+              value={date}
               onChange={handledatetimeChange}
             />
             <button type="submit">Add</button>
@@ -452,7 +503,48 @@ export default function Home() {
           </Typography>
          
         </Box>
+        </Fade>
       </Modal>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openModalUpdate}
+        onClose={handleCloseModalUpdate}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={openModalUpdate}>
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <form onSubmit={handleUpdateTodo}>
+  <input
+    type="text"
+    name="todo"
+    value={updatedTodo}
+    onChange={(e) => setUpdatedTodo(e.target.value)}
+    placeholder="Enter updated to-do item"
+  />
+  <input
+    type="datetime-local"
+    name="datetime"
+    value={updatedDate}
+    onChange={(e) => setUpdatedDate(e.target.value)}
+  />
+  <button type="submit">Update</button>
+</form>
+
+          </Typography>
+         
+        </Box>
+        </Fade>
+      </Modal>
+    </div>
+      
     </div>
           {userInfo ? (
         <div>
@@ -477,7 +569,8 @@ export default function Home() {
                   <td>{item.todo}</td>
                   <td>{item.date}</td>
                   <td>
-    <button onClick={() => handleDeleteTodo(item.no)}>Delete</button>
+    <button onClick={() => handleDeleteTodo(item.no)}>Trash</button>
+    <button onClick={() => handleOpenModalUpdate(item)}>Update</button>
   </td>
   
                 </tr>
