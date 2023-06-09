@@ -18,6 +18,7 @@ import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Stack from '@mui/material/Stack';
+import signup from "../images/signup.svg";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,17 +61,30 @@ function Login() {
     event.preventDefault();
   };
   return (
-    <div className="login-container">
-        <CssBaseline />
-
-        
-      
-       <div className="container-card">
-      <form onSubmit={handleFormSubmit}>
+   <div className="container-login">
+<div className="grid-login">
+<div className="left-side">
+ <div className="signto">
+ <img src={signup} alt="signup" />
+ <h1>Sign in to <br></br>Todo Hoods  </h1>
+ <div>
+  <p>if you don't have an account , you can register here !</p>
+ </div>
+ 
+  </div>
+   
+ 
+ 
+  
+</div>
+ 
+<div className="right-side">
+<h2>Hello Friend </h2>
+  <form onSubmit={handleFormSubmit}>
       <p>{message}</p>
      
-     <FormControl>
-     <FormControl fullWidth sx={{  m: 1}} variant="outlined">
+     
+     <FormControl className="FormControl"fullWidth sx={{  m: 1}} variant="outlined">
           <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
@@ -106,60 +120,20 @@ function Login() {
             }
             label="Password"
           />
-           <div className="login-btn">
-             <Stack direction="row" spacing={2}>
-      <Button type="submit" variant="contained">Sign in</Button>
+           <div className="box-btn">
+            
+      <Button className="button-login" fullWidth   type="submit"  variant="contained">Sign in</Button>
       
        
-    </Stack>
+  
     </div>
         </FormControl>
-        </FormControl>
+    
       
        </form>
-     
-      <div>
-         
-       </div> 
-       
-      </div>
-   
-      
-{/*        
-      <Container className="container-card" maxW="lg">
-        <form onSubmit={handleFormSubmit}>
-          <FormControl className="FormControl">
-            <p>{message}</p>
-            <div className="head-sign">
-              <h2>SIGN IN</h2>
-              <p>What are you waiting for? Sign in now!</p>
-            </div>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <div className="forgot">
-              <p>Forgot Password?</p>
-            </div>
-            <div className="login-btn">
-              <Button colorScheme="blue" type="submit">
-                Sign in
-              </Button>
-            </div>
-          </FormControl>
-        </form>
-      </Container> */}
-    </div>
+</div>
+</div>
+   </div>
   );
 }
 
