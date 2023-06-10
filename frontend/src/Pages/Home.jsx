@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -21,7 +23,10 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import Avatar from "@mui/material/Avatar";
+ 
 
+
+ 
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -288,6 +293,15 @@ export default function Home() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+ 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
+ 
   return (
     <div className="home-container">
       <Box sx={{ display: "flex" }}>
@@ -306,24 +320,27 @@ export default function Home() {
             >
               <MenuIcon />
             </IconButton>
-            <div className="head-tool">
-            <Typography variant="h6" noWrap component="div">
-              TODO
-            </Typography>
-            <div className="user-head">
-              {userInfo ? (
-                <h2 className="session-name">{userInfo.email}</h2>
-              ) : (
-                <p>Loading email</p>
-              )}
-               <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-              >
-                <Tooltip title="Account settings">
+            
+            <Box width="100%" >
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h5" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900 }}>TODO</Typography>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          
+          {userInfo && (
+ <Typography className="session-name" variant="body1" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}> {userInfo.email}</Typography>
+              ) }
+         
+          <Tooltip title="Account settings">
                   <IconButton
                     onClick={handleClick}
                     size="small"
@@ -335,9 +352,9 @@ export default function Home() {
                     <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
                   </IconButton>
                 </Tooltip>
-              </Box>
-              </div>
-             
+        </div>
+      </Grid>
+    </Box>
               <Menu
                 anchorEl={anchorEl}
                 id="account-menu"
@@ -399,7 +416,7 @@ export default function Home() {
                   Logout
                 </MenuItem>
               </Menu>
-            </div>
+            
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
