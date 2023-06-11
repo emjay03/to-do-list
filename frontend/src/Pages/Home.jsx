@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -18,15 +18,15 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import Avatar from "@mui/material/Avatar";
- 
-
-
- 
+import ArchiveIcon from "@mui/icons-material/Archive";
+import UpdateIcon from "@mui/icons-material/Update";
+import TextField from "@mui/material/TextField";
+import AddIcon from "@mui/icons-material/Add";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -35,17 +35,27 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-import Backdrop from '@mui/material/Backdrop';
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import Backdrop from "@mui/material/Backdrop";
+
+import Card from "@mui/material/Card";
+import { CardHeader } from "@mui/material";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+
+import { grey,green } from '@mui/material/colors';
+
+const colorgrey = grey[900];
+const colorgreen = green[900];
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+
   boxShadow: 24,
   p: 4,
 };
@@ -122,36 +132,42 @@ export default function Home() {
   const [userInfo, setUserInfo] = useState(null);
   const [todo, setTodo] = useState("");
   const [date, setdate] = useState("");
+  const [dateend, setdateend] = useState("");
   const [todoList, setTodoList] = useState([]);
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  const [updatedTodo, setUpdatedTodo] = useState('');
-  const [updatedDate, setUpdatedDate] = useState('');
+  const [updatedTodo, setUpdatedTodo] = useState("");
+  const [updatedDate, setUpdatedDate] = useState("");
+  const [updatedDateend, setUpdatedDateend] = useState("");
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
-  
+
   const handleOpenModalUpdate = (item) => {
     setSelectedTodo(item);
     setUpdatedTodo(item.todo);
     setUpdatedDate(item.date);
+    setUpdatedDateend(item.dateend);
     setOpenModalUpdate(true);
   };
-  
+
   const handleCloseModalUpdate = () => {
     setOpenModalUpdate(false);
   };
-  
+
   const handleUpdateTodo = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await axios.put(`http://localhost:4598/update/${selectedTodo.no}`, {
-        iduser: userInfo.iduser,
-        todo: updatedTodo,
-        date: updatedDate,
-      });
+      const response = await axios.put(
+        `http://localhost:4598/update/${selectedTodo.no}`,
+        {
+          iduser: userInfo.iduser,
+          todo: updatedTodo,
+          date: updatedDate,
+        }
+      );
       if (response.status === 200) {
         alert("To-do updated successfully!");
         setOpenModalUpdate(false);
@@ -163,7 +179,6 @@ export default function Home() {
       // Handle error if request fails
     }
   };
-  
 
   useEffect(() => {
     const { state } = location;
@@ -229,38 +244,50 @@ export default function Home() {
     setdate(e.target.value);
   };
 
-  const handleAddTodo = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post("http://localhost:4598/insert", {
-        iduser: userInfo.iduser,
-        todo: todo,
-        date: date,
-      });
-      if (response.status === 200) {
-        // Clear the input field after adding the to-do
-        setTodo("");
-        setdate("");
-        alert("To-do added successfully!");
-        // Fetch the updated to-do list
-        fetchTodoList();
-      } else {
-        // Handle error if adding the to-do fails
-      }
-    } catch (error) {
-      // Handle error if request fails
-    }
+  const handledateend = (e) => {
+    setdateend(e.target.value);
   };
 
-   
+  const handleAddTodo = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post("http://localhost:4598/insert", {
+      iduser: userInfo.iduser,
+      todo: todo,
+      date: date,
+      dateend: dateend,
+    });
+
+    console.log(response); // Log the response object for debugging
+
+    if (response.status === 201) { // Update the condition to check for status code 201
+      // Clear the input field after adding the to-do
+      alert("To-do added successfully!");
+      setTodo("");
+      setdate("");
+      setdateend("");
+
+      // Fetch the updated to-do list
+      fetchTodoList();
+    } else {
+      // Handle error if adding the to-do fails
+      alert("Failed to add the to-do. Please try again.");
+    }
+  } catch (error) {
+    // Handle error if request fails
+    console.error("An error occurred:", error);
+    alert("An error occurred while adding the to-do. Please try again.");
+  }
+};
+
   
+
   const handleDeleteTodo = async (no) => {
     try {
       const response = await axios.delete(`http://localhost:4598/delete/${no}`);
       if (response.status === 200) {
         alert("To-do deleted successfully!");
-       
       } else {
         // Handle error if deleting the to-do fails
       }
@@ -268,7 +295,6 @@ export default function Home() {
       // Handle error if request fails
     }
   };
-  
 
   const handleProfileClick = () => {
     navigate("/profile", { state: { userInfo } });
@@ -293,21 +319,21 @@ export default function Home() {
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
+
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
     padding: theme.spacing(1),
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.secondary,
   }));
- 
+
   return (
     <div className="home-container">
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar className="head-bar" position="fixed" open={open}>
-          <Toolbar >
+          <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -320,103 +346,116 @@ export default function Home() {
             >
               <MenuIcon />
             </IconButton>
-            
-            <Box width="100%" >
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Typography variant="h5" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900 }}>TODO</Typography>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          
-          {userInfo && (
- <Typography className="session-name" variant="body1" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}> {userInfo.email}</Typography>
-              ) }
-         
-          <Tooltip title="Account settings">
-                  <IconButton
-                    onClick={handleClick}
-                    size="small"
-                    sx={{ ml: 2 }}
-                    aria-controls={open ? "account-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                  >
-                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-                  </IconButton>
-                </Tooltip>
-        </div>
-      </Grid>
-    </Box>
-              <Menu
-                anchorEl={anchorEl}
-                id="account-menu"
-                open={opens}
-                onClose={handleClose}
-                onClick={handleClose}
-                PaperProps={{
-                  elevation: 0,
-                  sx: {
-                    overflow: "visible",
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                    mt: 1.5,
-                    "& .MuiAvatar-root": {
-                      width: 32,
-                      height: 32,
-                      ml: -0.5,
-                      mr: 1,
-                    },
-                    "&:before": {
-                      content: '""',
-                      display: "block",
-                      position: "absolute",
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: "background.paper",
-                      transform: "translateY(-50%) rotate(45deg)",
-                      zIndex: 0,
-                    },
-                  },
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+
+            <Box width="100%">
+              <Grid
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                <MenuItem onClick={handleClose}>
-                  <Avatar /> Profile
-                </MenuItem>
-                <MenuItem onClick={handleProfileClick}>
-                  <Avatar /> My account
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <PersonAdd fontSize="small" />
-                  </ListItemIcon>
-                  Add another account
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  Settings
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>
-              </Menu>
-            
+                <Typography
+                  variant="h5"
+                  style={{ fontFamily: "Poppins, sans-serif", fontWeight: 900 }}
+                >
+                  TODO
+                </Typography>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {userInfo && (
+                    <Typography
+                      className="session-name"
+                      variant="body1"
+                      style={{
+                        fontFamily: "Poppins, sans-serif",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {" "}
+                      {userInfo.email}
+                    </Typography>
+                  )}
+
+                  <Tooltip title="Account settings">
+                    <IconButton
+                      onClick={handleClick}
+                      size="small"
+                      sx={{ ml: 2 }}
+                      aria-controls={open ? "account-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                    >
+                      <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </Grid>
+            </Box>
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={opens}
+              onClose={handleClose}
+              onClick={handleClose}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 1.5,
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&:before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem onClick={handleClose}>
+                <Avatar /> Profile
+              </MenuItem>
+              <MenuItem onClick={handleProfileClick}>
+                <Avatar /> My account
+              </MenuItem>
+              <Divider />
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <PersonAdd fontSize="small" />
+                </ListItemIcon>
+                Add another account
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <Settings fontSize="small" />
+                </ListItemIcon>
+                Settings
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -431,28 +470,33 @@ export default function Home() {
           </DrawerHeader>
           <Divider />
           <List>
-            {["Todo", "In progress", "Completed", "Archived"].map((text, index) => (
-              <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
+            {["Todo", "In progress", "Completed", "Archived"].map(
+              (text, index) => (
+                <ListItem key={text} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
                     sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              )
+            )}
           </List>
           <Divider />
           <List>
@@ -483,124 +527,302 @@ export default function Home() {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <div>
-          <div>
-      <Button onClick={handleOpenModal}>Open modal</Button>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openModal}
-        onClose={handleCloseModal}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
+            <div>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={handleOpenModal}
+                style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}
+              >
+                CreateTodo  
+              </Button>
+              <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <form onSubmit={handleAddTodo}>
+                  <TextField
+                   style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}
+                   type="text"
+                   name="todo"
+                   value={todo}
+                   onChange={handleTodoChange}
+                   placeholder="Enter a to-do item"
+          required
+         
+          label="Enter To-do"
+        fullWidth
+        InputProps={{
+          style: {
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 400,
+          },
+          inputProps: {
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+            },
           },
         }}
-      >
-        <Fade in={openModal}>
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-          <form onSubmit={handleAddTodo}>
-            <input
-              type="text"
-              name="todo"
-              value={todo}
-              onChange={handleTodoChange}
-              placeholder="Enter a to-do item"
-            />
-            <input
-              type="datetime-local"
-              name="datetime"
-              value={date}
-              onChange={handledatetimeChange}
-            />
-            <button type="submit">Add</button>
-          </form>
-          </Typography>
-         
-        </Box>
-        </Fade>
-      </Modal>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={openModalUpdate}
-        onClose={handleCloseModalUpdate}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
+        InputLabelProps={{
+          style: {
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 600,
           },
+          shrink: true,
         }}
-      >
-        <Fade in={openModalUpdate}>
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-          <form onSubmit={handleUpdateTodo}>
-  <input
-    type="text"
-    name="todo"
-    value={updatedTodo}
-    onChange={(e) => setUpdatedTodo(e.target.value)}
-    placeholder="Enter updated to-do item"
-  />
-  <input
-    type="datetime-local"
-    name="datetime"
-    value={updatedDate}
-    onChange={(e) => setUpdatedDate(e.target.value)}
-  />
-  <button type="submit">Update</button>
-</form>
-
-          </Typography>
-         
-        </Box>
-        </Fade>
-      </Modal>
-    </div>
-      
-    </div>
-          {userInfo ? (
-        <div>
-          
            
-          <h3>Add a To-Do</h3>
-          
-
-          <h3>To-Do List</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>To-Do</th>
-                <th>Date time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {todoList.map((item) => (
-                <tr key={item.no}>
-                  <td>{item.iduser}</td>
-                  <td>{item.todo}</td>
-                  <td>{item.date}</td>
-                  <td>
-    <button onClick={() => handleDeleteTodo(item.no)}>Trash</button>
-    <button onClick={() => handleOpenModalUpdate(item)}>Update</button>
-  </td>
-  
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p>Loading user information...</p>
-      )}
+        />
+         <TextField
+                     type="datetime-local"
+                     name="datetime"
+                     value={date}
+                     onChange={handledatetimeChange}
+                     margin="normal"
+                     fullWidth
+                     autoFocus
+         
+          label="Start"
         
-     
-          
+          InputProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+            },
+            inputProps: {
+              style: {
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 400,
+              },
+            },
+          }}
+          InputLabelProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+            },
+            shrink: true,
+          }}
+           
+        />
+          <TextField
+                     type="datetime-local"
+                     name="datetime"
+                     value={dateend}
+                     onChange={handledateend}
+                     margin="normal"
+                     fullWidth
+                     autoFocus
+         
+          label="End"
+        
+          InputProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+            },
+            inputProps: {
+              style: {
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 400,
+              },
+            },
+          }}
+          InputLabelProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+            },
+            shrink: true,
+          }}
+           
+        />
+                   
+                    
+                   <Button variant="contained" type="submit">Add</Button>
+                  </form>
+                </Box>
+              </Modal>
+              <Modal
+                open={openModalUpdate}
+                onClose={handleCloseModalUpdate}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <form  onSubmit={handleUpdateTodo}>
+                  <TextField
+   
+  type="text"
+  name="todo"
+  value={updatedTodo}
+  onChange={(e) => setUpdatedTodo(e.target.value)}
+  placeholder="Enter a to-do item"
+  required
+  label="Enter To-do"
+  fullWidth
+  InputProps={{
+    style: {
+      fontFamily: 'Poppins, sans-serif',
+      fontWeight: 400,
+    },
+    inputProps: {
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 400,
+      },
+    },
+  }}
+  InputLabelProps={{
+    style: {
+      fontFamily: 'Poppins, sans-serif',
+      fontWeight: 600,
+    },
+    shrink: true,
+  }}
+/>
+
+         <TextField
+                     type="datetime-local"
+                     name="datetime"
+                     value={updatedDate}
+                          onChange={(e) => setUpdatedDate(e.target.value)}
+                     margin="normal"
+                     fullWidth
+                     autoFocus
+         
+          label="Start"
+        
+          InputProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+            },
+            inputProps: {
+              style: {
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 400,
+              },
+            },
+          }}
+          InputLabelProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+            },
+            shrink: true,
+          }}
+           
+        />
+          <TextField
+                     type="datetime-local"
+                     name="datetime"
+                     value={updatedDateend}
+                          onChange={(e) => setUpdatedDateend(e.target.value)}
+                     margin="normal"
+                     fullWidth
+                     autoFocus
+         
+          label="End"
+        
+          InputProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+            },
+            inputProps: {
+              style: {
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: 400,
+              },
+            },
+          }}
+          InputLabelProps={{
+            style: {
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+            },
+            shrink: true,
+          }}
+           
+        />
+                   
+                    
+                   <Button variant="contained" type="submit">Update</Button>
+                  </form>
+                </Box>
+              </Modal>
+            </div>
+          </div>
+          {userInfo ? (
+            <div>
+               
+
+              <Card sx={{ marginTop: '30px' }}>
+               
+                <CardContent>
+                  <Grid
+                    container
+                    rowSpacing={1}
+                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                  >
+                    {todoList.map((item) => (
+                      <Grid key={item.no} item xs={10} sm={6} md={4}>
+                        <Card sx={{ marginBottom: '10px' }}>
+                          <CardContent>
+                            
+                            <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+                              <strong>To-Do:</strong> {item.todo}
+                            </p>
+                            <p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+  <strong>Start Datetime:</strong> {new Date(item.date).toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: '2-digit',
+  })}{' '}
+  {new Date(item.date).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  })}
+</p>
+<p style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 500 }}>
+  <strong>End Datetime:</strong> {new Date(item.dateend).toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+    year: '2-digit',
+  })}{' '}
+  {new Date(item.date).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  })}
+</p>
+
+                            <IconButton
+                              onClick={() => handleDeleteTodo(item.no)}
+                            >
+                              <ArchiveIcon sx={{ color: grey[900]}} />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleOpenModalUpdate(item)}
+                            >
+                              <UpdateIcon  sx={{ color: green[900]}} />
+                            </IconButton>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </CardContent>
+              </Card>
+            </div>
+          ) : (
+            <p>Loading user information...</p>
+          )}
         </Box>
       </Box>
     </div>

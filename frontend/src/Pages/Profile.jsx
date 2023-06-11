@@ -20,7 +20,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
- 
+import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -217,24 +217,27 @@ export default function Profile() {
             >
               <MenuIcon />
             </IconButton>
-            <div className="head-tool">
-            <Typography variant="h6" noWrap component="div">
-              Profile
-            </Typography>
-            <div className="user-head">
-              {userInfo ? (
-                <h2 className="session-name">{userInfo.email}</h2>
-              ) : (
-                <p>Loading email</p>
-              )}
-               <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-              >
-                <Tooltip title="Account settings">
+            
+            <Box width="100%" >
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Typography variant="h5" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 900 }}>TODO</Typography>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          
+          {userInfo && (
+ <Typography className="session-name" variant="body1" style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 700 }}> {userInfo.email}</Typography>
+              ) }
+         
+          <Tooltip title="Account settings">
                   <IconButton
                     onClick={handleClick}
                     size="small"
@@ -246,9 +249,9 @@ export default function Profile() {
                     <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
                   </IconButton>
                 </Tooltip>
-              </Box>
-              </div>
-             
+        </div>
+      </Grid>
+    </Box>
               <Menu
                 anchorEl={anchorEl}
                 id="account-menu"
@@ -310,7 +313,7 @@ export default function Profile() {
                   Logout
                 </MenuItem>
               </Menu>
-            </div>
+            
           </Toolbar>
         </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -373,64 +376,124 @@ export default function Profile() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         <div className="main-content">
-     {userInfo ? (
-  <h2 className="session-name">{userInfo.email}</h2>
-) : (
-  <p>Loading email</p>
-)}
+     <h1   style={{ fontFamily: "Poppins, sans-serif", fontWeight: 700 }}>Update Profile</h1>
       <Container>
       {userInfo ? (
          
         <div>
            
           <form onSubmit={handleFormSubmit}>
-          <FormControl>
-     <FormControl fullWidth sx={{  m: 1}} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type="email"
-                name="email"
-                value={updatedInfo.email}
-                onChange={handleInputChange}
-             
-            label="Email"
-          />
-        </FormControl>
+          <Box width="100%">
+  <TextField
+    style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}
+    type="email"
+    name="email"
+    value={updatedInfo.email}
+    onChange={handleInputChange}
+    placeholder="Enter Email"
+    required
+    label="Email"
+    fullWidth
+    InputProps={{
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 400,
+      },
+      inputProps: {
+        style: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: 400,
+        },
+      },
+    }}
+    InputLabelProps={{
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 600,
+      },
+      shrink: true,
+    }}
+  />
 
-        <FormControl fullWidth sx={{  m: 1}} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type="password"
-                name="password"
-                value={updatedInfo.password}
-                onChange={handleInputChange}
-            label="Email"
-          />
-        </FormControl>
+  {/* Add margin bottom to create space */}
+  <Box marginBottom={2} />
 
-        <FormControl fullWidth sx={{  m: 1}} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type="password"
-            name="confirmPassword"
-            value={updatedInfo.confirmPassword}
-            onChange={handleInputChange}
-          />
-        </FormControl>
-        
-        {!passwordMatch && (
-                <FormHelperText color="red">
-                  Passwords do not match
-                </FormHelperText>
-              )}
+  <TextField
+    style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}
+    type="password"
+    name="password"
+    value={updatedInfo.password}
+    onChange={handleInputChange}
+    placeholder="Enter Password"
+    required
+    label="Password"
+    fullWidth
+    InputProps={{
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 400,
+      },
+      inputProps: {
+        style: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: 400,
+        },
+      },
+    }}
+    InputLabelProps={{
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 600,
+      },
+      shrink: true,
+    }}
+  />
 
-              <Button type="submit">Update</Button>
-            
-        </FormControl>
-           
+  {/* Add margin bottom to create space */}
+  <Box marginBottom={2} />
+
+  <TextField
+    style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}
+    type="password"
+    name="confirmPassword"
+    value={updatedInfo.confirmPassword}
+    onChange={handleInputChange}
+    placeholder="Enter ConfirmPassword"
+    required
+    label="ConfirmPassword"
+    fullWidth
+    InputProps={{
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 400,
+      },
+      inputProps: {
+        style: {
+          fontFamily: 'Poppins, sans-serif',
+          fontWeight: 400,
+        },
+      },
+    }}
+    InputLabelProps={{
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        fontWeight: 600,
+      },
+      shrink: true,
+    }}
+  />
+
+  {/* Add margin bottom to create space */}
+  <Box marginBottom={2} />
+
+  {!passwordMatch && (
+    <FormHelperText color="red">
+      Passwords do not match
+    </FormHelperText>
+  )}
+
+  <Button   style={{ fontFamily: "Poppins, sans-serif", fontWeight: 600 }} variant="contained" color="primary"  type="submit">Update</Button>
+</Box>
            
 
                
@@ -446,19 +509,7 @@ export default function Profile() {
     </Container>
       
     </div>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        
       </Box>
     </Box>
   );

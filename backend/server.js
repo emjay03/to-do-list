@@ -91,13 +91,13 @@ app.get('/todos/:iduser', (req, res) => {
  
 // API endpoint to handle adding to-do item
 app.post('/insert', (req, res) => {
-  const { iduser, todo ,datetime} = req.body;
+  const { iduser, todo ,date,dateend} = req.body;
 
   // Construct the INSERT query
-  const query = 'INSERT INTO tblcreatetodo (iduser, todo,date) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO tblcreatetodo (iduser, todo,date,dateend) VALUES (?, ?, ?, ?)';
 
   // Execute the query with parameterized values
-  db.query(query, [iduser, todo,datetime], (error, results, fields) => {
+  db.query(query, [iduser, todo,date,dateend], (error, results, fields) => {
     if (error) {
       console.error('Error occurred:', error);
       res.status(500).json({ message: 'An error occurred' });
