@@ -163,7 +163,7 @@ export default function Profile() {
   
       try {
         const response = await axios.put(
-          `http://localhost:4598/user/${userInfo.iduser}`,
+          `http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user/${userInfo.iduser}`,
           updatedInfo
         );
         if (response.status === 200) {
