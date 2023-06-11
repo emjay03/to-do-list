@@ -161,7 +161,7 @@ export default function Home() {
 
     try {
       const response = await axios.put(
-        `http://localhost:4598/update/${selectedTodo.no}`,
+        `http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/update/${selectedTodo.no}`,
         {
           iduser: userInfo.iduser,
           todo: updatedTodo,
@@ -188,7 +188,7 @@ export default function Home() {
       const fetchUserInfo = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:4598/user/${state.sessionName}`
+            `http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/user/${state.sessionName}`
           );
           if (response.status === 200) {
             setUserInfo(response.data);
@@ -226,7 +226,7 @@ export default function Home() {
 
   const fetchTodoList = async (iduser) => {
     try {
-      const response = await axios.get(`http://localhost:4598/todos/${iduser}`);
+      const response = await axios.get(`http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/todos/${iduser}`);
       if (response.status === 200) {
         setTodoList(response.data);
       } else {
@@ -252,7 +252,7 @@ export default function Home() {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://localhost:4598/insert", {
+    const response = await axios.post("http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/insert", {
       iduser: userInfo.iduser,
       todo: todo,
       date: date,
@@ -285,7 +285,7 @@ export default function Home() {
 
   const handleDeleteTodo = async (no) => {
     try {
-      const response = await axios.delete(`http://localhost:4598/delete/${no}`);
+      const response = await axios.delete(`http://ec2-3-27-58-198.ap-southeast-2.compute.amazonaws.com:4598/delete/${no}`);
       if (response.status === 200) {
         alert("To-do deleted successfully!");
       } else {
